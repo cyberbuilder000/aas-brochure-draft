@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" role="img" aria-label="Diagram: abstract steel rack geometric mark">
+  <title>AAS Hero Mark — Diagram</title>
+  <desc>Abstract industrial geometric mark suggesting steel rack structure. Diagram only — not a project photo.</desc>
+  <defs>
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8fa3b5"/>
+      <stop offset="100%" stop-color="#4a5d6e"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c45c26"/>
+      <stop offset="100%" stop-color="#e08a4f"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="480" fill="#0e1114"/>
+  <!-- Base platform -->
+  <polygon points="60,400 200,440 340,400 200,360" fill="#1c2329" stroke="#2c3640" stroke-width="1.5"/>
+  <!-- Vertical columns -->
+  <rect x="95" y="140" width="18" height="240" fill="url(#steelGrad)" opacity="0.9"/>
+  <rect x="287" y="140" width="18" height="240" fill="url(#steelGrad)" opacity="0.9"/>
+  <rect x="191" y="100" width="18" height="280" fill="#6b8499" opacity="0.85"/>
+  <!-- Cross beams -->
+  <polygon points="95,180 305,180 305,195 95,195" fill="#8fa3b5" opacity="0.7"/>
+  <polygon points="95,250 305,250 305,265 95,265" fill="#8fa3b5" opacity="0.55"/>
+  <polygon points="95,320 305,320 305,335 95,335" fill="#8fa3b5" opacity="0.4"/>
+  <!-- Top frame -->
+  <polygon points="80,120 200,90 320,120 305,140 200,115 95,140" fill="url(#steelGrad)" stroke="#a8bbc9" stroke-width="1"/>
+  <!-- Amber accent diagonal -->
+  <polygon points="200,90 230,100 115,280 95,265" fill="url(#amberGrad)" opacity="0.85"/>
+  <!-- Cable tray hint (top tier) -->
+  <rect x="110" y="155" width="180" height="8" rx="1" fill="#4a6a82" opacity="0.8"/>
+  <rect x="110" y="168" width="180" height="4" rx="1" fill="#3a5568" opacity="0.6"/>
+  <!-- Label -->
+  <text x="200" y="470" text-anchor="middle" fill="#6b7883" font-family="Segoe UI, Arial, sans-serif" font-size="11" letter-spacing="2">DIAGRAM · NOT A PROJECT PHOTO</text>
+</svg>
