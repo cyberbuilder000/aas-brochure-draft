@@ -21,7 +21,7 @@
     <rect x="380" y="156" width="14" height="14" fill="#8fa3b5"/>
     <text x="406" y="168" fill="#e8ecef" font-size="13" font-weight="700">MEP Engineering (when required)</text>
     <text x="406" y="186" fill="#9aa7b2" font-size="11">Full M/E/P / process utilities — design packages,</text>
-    <text x="406" y="202" fill="#9aa7b2" font-size="11">coordinated models; stamped where applicable (jurisdiction TBD)</text>
+    <text x="406" y="202" fill="#9aa7b2" font-size="11">coordinated models; stamped drawings per project jurisdiction</text>
 
     <rect x="380" y="232" width="14" height="14" fill="#c45c26" opacity="0.35"/>
     <rect x="380" y="232" width="14" height="14" fill="none" stroke="#c45c26" stroke-width="2"/>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Allied Advanced Systems — Structural Rack &amp; Plant MEP Integration</title>
+<style>
+  :root {
+    --bg: #0e1114;
+    --bg-elev: #161b20;
+    --bg-card: #1c2329;
+    --line: #2c3640;
+    --text: #e8ecef;
+    --muted: #9aa7b2;
+    --dim: #6b7883;
+    --accent: #c45c26;
+    --accent-soft: #e08a4f;
+    --steel: #8fa3b5;
+    --ok: #7a9e7e;
+    --white: #ffffff;
+    --page-w: 11in;
+    --page-h: 8.5in;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #050607;
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 11.5pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet {
+    width: var(--page-w);
+    height: var(--page-h);
+    margin: 0.4in auto;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 0.5in 0.55in;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+    display: flex;
+    flex-direction: column;
+  }
+  .sheet:last-child { page-break-after: auto; }
+
+  .eyebrow {
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    font-weight: 600;
+  }
+  .brand-lock {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.22in;
+    margin-bottom: 0.28in;
+  }
+  .brand-lock .aas {
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .brand-lock .pedigree {
+    font-size: 8pt;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
+  .page-num {
+    position: absolute;
+    bottom: 0.24in;
+    right: 0.5in;
+    font-size: 8pt;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+  .footer-bar {
+    position: absolute;
+    bottom: 0.24in;
+    left: 0.55in;
+    font-size: 7.5pt;
+    color: var(--dim);
+    letter-spacing: 0.06em;
+  }
+
+  h1 {
+    font-size: 32pt;
+    line-height: 1.05;
+    font-weight: 700;
+    margin: 0 0 0.16in;
+    letter-spacing: -0.01em;
+  }
+  h1 .accent-line { color: var(--accent-soft); }
+  h2 {
+    font-size: 20pt;
+    line-height: 1.1;
+    margin: 0 0 0.14in;
+    font-weight: 700;
+  }
+  h3 {
+    font-size: 11pt;
+    margin: 0 0 0.06in;
+    color: var(--accent-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  p { margin: 0 0 0.12in; color: var(--text); }
+  .lede { font-size: 12pt; color: var(--steel); max-width: 6.8in; }
+  .muted { color: var(--muted); }
+  .dim { color: var(--dim); font-size: 9pt; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.2in;
+    margin: 0.28in 0 0.22in;
+  }
+  .stat {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    padding: 0.14in 0.16in;
+  }
+  .stat .n { font-size: 26pt; font-weight: 700; line-height: 1; color: var(--white); }
+  .stat .l { font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 0.06in; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.07in;
+    margin-top: 0.16in;
+  }
+  .chip {
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    padding: 0.04in 0.1in;
+    font-size: 7.5pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.22in;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.16in;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0.14in;
+  }
+
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 0.14in 0.16in;
+  }
+  .card h3 { margin-bottom: 0.05in; }
+  .card p { font-size: 9.5pt; margin: 0; color: var(--muted); }
+
+  .tile {
+    background: var(--bg-card);
+    border-top: 2px solid var(--accent);
+    padding: 0.12in 0.14in;
+  }
+  .tile strong { display: block; color: var(--white); margin-bottom: 0.03in; font-size: 10pt; }
+  .tile span { font-size: 9pt; color: var(--muted); }
+
+  .spec-row {
+    display: grid;
+    grid-template-columns: 1.25in 1fr;
+    gap: 0.1in;
+    padding: 0.07in 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 9.5pt;
+  }
+  .spec-row .k {
+    font-size: 7.5pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    font-weight: 600;
+    padding-top: 0.02in;
+  }
+  .spec-row .v { color: var(--muted); }
+
+  .apps {
+    margin-top: 0.14in;
+    font-size: 8.5pt;
+    color: var(--steel);
+    letter-spacing: 0.04em;
+  }
+  .apps b { color: var(--dim); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 0.08in; }
+
+  .note-box {
+    margin-top: 0.14in;
+    padding: 0.12in 0.14in;
+    background: #141a1f;
+    border-left: 3px solid var(--steel);
+    font-size: 9pt;
+    color: var(--muted);
+  }
+  .boundary {
+    margin-top: 0.12in;
+    padding: 0.12in 0.14in;
+    background: #1a1512;
+    border: 1px solid #5a3a28;
+    border-left: 3px solid var(--accent);
+    font-size: 9pt;
+    color: var(--accent-soft);
+  }
+  .avail-box {
+    margin-top: 0.12in;
+    padding: 0.12in 0.14in;
+    background: #121816;
+    border: 1px solid #2a4030;
+    border-left: 3px solid var(--ok);
+    font-size: 9pt;
+    color: var(--ok);
+  }
+
+  .scope-in { border-top: 2px solid var(--ok); }
+  .scope-out { border-top: 2px solid var(--accent); }
+  .scope-mep { border-top: 2px solid var(--steel); }
+
+  .cta-list { list-style: none; padding: 0; margin: 0.12in 0; }
+  .cta-list li {
+    padding: 0.05in 0 0.05in 0.18in;
+    position: relative;
+    color: var(--muted);
+    font-size: 10.5pt;
+  }
+  .cta-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent-soft);
+  }
+
+  .contact-block {
+    margin-top: 0.18in;
+    display: flex;
+    gap: 0.4in;
+    flex-wrap: wrap;
+    font-size: 11.5pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .contact-block span { color: var(--white); }
+
+  .process {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.08in;
+    margin: 0.14in 0 0.18in;
+  }
+  .process .step {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 0.1in;
+    min-height: 1.05in;
+  }
+  .process .n {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.04in;
+  }
+  .process .t {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.03in;
+  }
+  .process .d { font-size: 7.5pt; color: var(--muted); line-height: 1.3; }
+
+  .hero-split {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 0.35in;
+    flex: 1;
+    align-items: center;
+  }
+  .tagline {
+    font-size: 15pt;
+    color: var(--steel);
+    margin: 0 0 0.16in;
+    font-weight: 500;
+  }
+
+  .two-col-body {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 0.28in;
+    flex: 1;
+  }
+  .prod-split {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 0.28in;
+    flex: 1;
+  }
+
+  .prod-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.14in;
+  }
+  .prod-id {
+    font-size: 9pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    font-weight: 700;
+  }
+  .prod-tags {
+    text-align: right;
+    font-size: 7.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+    line-height: 1.55;
+  }
+
+  .viz {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 0.1in;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .viz img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .viz-caption {
+    font-size: 7.5pt;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 0.08in;
+    text-align: center;
+  }
+  .viz-hero {
+    max-height: 4.2in;
+  }
+  .viz-hero img { max-height: 3.9in; object-fit: contain; }
+  .viz-inline img { max-height: 2.6in; object-fit: contain; }
+  .viz-flow img { max-height: 1.6in; object-fit: contain; }
+
+
+  .viz-photo {
+    padding: 0;
+    overflow: hidden;
+    background: #0a0c0e;
+  }
+  .viz-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .viz-photo .viz-caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    margin: 0;
+    padding: 0.06in 0.08in;
+    background: rgba(8,10,12,0.72);
+    text-align: left;
+  }
+  .viz-photo { position: relative; }
+  .viz-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12in;
+  }
+  .viz-stack .viz { flex: 1; }
+  .viz-inset {
+    max-height: 1.35in;
+  }
+  .viz-inset img {
+    max-height: 1.25in;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .sheet-cover {
+    background-image:
+      linear-gradient(90deg, rgba(14,17,20,0.97) 0%, rgba(14,17,20,0.93) 48%, rgba(14,17,20,0.78) 100%),
+      url("assets/from-original/cover-bg-darkened.png");
+    background-size: cover;
+    background-position: center right;
+  }
+  .sheet-textured {
+    background-image:
+      linear-gradient(180deg, rgba(14,17,20,0.92), rgba(14,17,20,0.96)),
+      url("assets/from-original/texture-navy-grid.png");
+    background-size: auto, cover;
+    background-position: center;
+  }
+  .credit-line {
+    font-size: 7pt;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+    margin-top: 0.06in;
+  }
+  .hero-split .viz-hero {
+    min-height: 4.4in;
+    height: 100%;
+  }
+  .hero-split .viz-hero img {
+    max-height: none;
+    height: 100%;
+    min-height: 4.0in;
+    object-fit: cover;
+  }
+  .prod-split .viz-inline {
+    min-height: 3.4in;
+  }
+  .prod-split .viz-photo img {
+    min-height: 3.2in;
+    max-height: 4.2in;
+    object-fit: cover;
+  }
+  .cta-visual {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 0.22in;
+    align-items: stretch;
+  }
+  .cta-visual .viz-photo {
+    min-height: 2.4in;
+  }
+
+
+  @media print {
+    html, body { background: white; }
+    .sheet {
+      margin: 0;
+      border: none;
+      width: 100%;
+      height: 100vh;
+      page-break-after: always;
+    }
+  
+    @page {
+      size: letter landscape;
+      margin: 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+<!-- ===================== PAGE 01 COVER ===================== -->
+<section class="sheet sheet-cover" id="p01">
+  <div class="brand-lock">
+    <div>
+      <div class="aas">Allied Advanced Systems</div>
+      <div class="pedigree">Built on Allied’s structural steel pedigree</div>
+    </div>
+    <div class="eyebrow">Structural · MEP Support · MEP Engineering · Integration</div>
+  </div>
+
+  <div class="hero-split">
+    <div>
+      <div class="eyebrow" style="margin-bottom:0.12in;">Custom structural rack solutions</div>
+      <h1>CUSTOM STRUCTURAL<br />RACK &amp; PLANT<br /><span class="accent-line">INTEGRATION</span></h1>
+      <p class="tagline">Steel support, without constraints.<br />Coordination that keeps every trade moving.</p>
+      <p class="lede">Engineered modular rack &amp; platform systems for cable tray, busway, process piping, MEP, and rooftop equipment — plus multi-trade integration support designed alongside your EPC, fabricated in-house, and delivered ready for erection. <strong style="color:var(--accent-soft);">Full MEP engineering available when required.</strong></p>
+      <div class="chips">
+        <span class="chip">AWS Certified</span>
+        <span class="chip">AISC Member</span>
+        <span class="chip">Seismic Compliant</span>
+        <span class="chip">CSA A660</span>
+        <span class="chip">IFC / Revit / BIM360</span>
+        <span class="chip">Factory-Direct</span>
+        <span class="chip">Dedicated PM</span>
+        <span class="chip">MEP Engineering Available</span>
+      </div>
+      <p class="dim" style="margin-top:0.1in;">*Real-Time Production Visibility available on select projects; confirm with your project manager.</p>
+    </div>
+    <div class="viz viz-hero viz-photo">
+      <img src="assets/from-original/cover-layers-illustration.png" alt="Original Allied cover art: structural support layers — cable tray, utility, piping" />
+      <div class="viz-caption">Imagery adapted from Allied structural rack brochure · cover art</div>
+    </div>
+  </div>
+
+  <div class="stats" style="margin-top:0.2in;">
+    <div class="stat"><div class="n">72+</div><div class="l">Countries</div></div>
+    <div class="stat"><div class="n">6k+</div><div class="l">Delivered steel structures</div></div>
+    <div class="stat"><div class="n">23+</div><div class="l">Years</div></div>
+  </div>
+  <div class="footer-bar">alliedbuildings.com · 1.877.997.8335 · INFO@ALLIEDBUILDINGS.COM</div>
+  <div class="page-num">01 / 08</div>
+</section>
+
+<!-- ===================== PAGE 02 WHY ===================== -->
+<section class="sheet" id="p02">
+  <div class="brand-lock">
+    <div class="aas">Why Allied Advanced Systems</div>
+    <div class="eyebrow">One team · Factory-direct</div>
+  </div>
+
+  <div class="two-col-body">
+    <div>
+      <h2>We Don’t Sell Steel.<br />We Solve Problems.</h2>
+      <p class="lede">Across mission-critical data centers, battery &amp; EV plants, petrochemical facilities, pharma &amp; food, logistics, and industrial campuses — one team engineers the support, coordinates the interfaces, and fabricates factory-direct. When the project requires it, we can also provide full MEP engineering.</p>
+
+      <div class="grid-2" style="margin-top:0.18in;">
+        <div class="card">
+          <h3>Purpose-Driven Engineering</h3>
+          <p>We engineer around your specific routing, loads, and seismic envelope. Every rack is a custom solution — sized to process equipment, utility density, and access.</p>
+        </div>
+        <div class="card">
+          <h3>Factory-Direct Control</h3>
+          <p>In-house fabrication means no subcontractor gaps. Your finish, your schedule, your sequence, delivered. Coil-to-form-to-finish capability behind every shipment.</p>
+        </div>
+        <div class="card">
+          <h3>Dedicated Project Team</h3>
+          <p>One point of contact from design to delivery. No handoffs, no dropped details between structural support, MEP scope (when engaged), and multi-trade interfaces.</p>
+        </div>
+        <div class="card">
+          <h3>Real-Time Visibility</h3>
+          <p>Live fabrication tracking with scheduled shipments tied to your crane plan and erection sequence. <span class="dim">*Select projects.</span></p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="viz viz-inline viz-photo" style="margin-bottom:0.16in; min-height:2.4in;">
+        <img src="assets/from-original/why-fab-detail.png" alt="Factory fabrication — robotic welding on structural steel" style="min-height:2.3in; object-fit:cover;" />
+        <div class="viz-caption">Imagery adapted from Allied structural rack brochure · fabrication</div>
+      </div>
+      <div class="stat" style="margin-bottom:0.14in;"><div class="n">1M+</div><div class="l" style="text-transform:none;letter-spacing:0.02em;font-size:9pt;line-height:1.35;margin-top:0.08in;">Across mission-critical data centers, battery &amp; EV plants, and petrochemical facilities on six continents.</div></div>
+      <div class="stat" style="margin-bottom:0.14in;"><div class="n">6,000+</div><div class="l" style="text-transform:none;letter-spacing:0.02em;font-size:9pt;line-height:1.35;margin-top:0.08in;">No system constraints. One team, zero handoffs. Precision at any scale, visibility from day one.</div></div>
+      <div class="chips">
+        <span class="chip">AWS Certified</span>
+        <span class="chip">AISC Member</span>
+        <span class="chip">CSA A660</span>
+        <span class="chip">Seismic Compliant</span>
+        <span class="chip">IFC / Revit / BIM360</span>
+      </div>
+      <div class="note-box">
+        Allied Advanced Systems extends Allied’s rack pedigree into plant MEP support, optional full MEP engineering, and integration coordination — so structural steel, utilities, and equipment platforms arrive as one coordinated package.
+      </div>
+    </div>
+  </div>
+  <div class="page-num">02 / 08</div>
+</section>
+
+<!-- ===================== PAGE 03 SCOPE MAP ===================== -->
+<section class="sheet sheet-textured" id="p03">
+  <div class="brand-lock">
+    <div class="aas">Scope Map</div>
+    <div class="eyebrow">Structural + MEP support + MEP engineering + Integration</div>
+  </div>
+
+  <h2>One Scope Map.<br />Clear Boundaries.</h2>
+  <p class="lede" style="margin-bottom:0.14in;">Default: we engineer structural support and coordinate with your EPC/MEP. <strong style="color:var(--accent-soft);">Available when required: full MEP engineering</strong> — mechanical, electrical, plumbing / process utilities.</p>
+
+  <div class="viz viz-flow" style="margin-bottom:0.16in;">
+    <img src="assets/scope-map.svg" alt="Diagram: scope rings — Structural, MEP Support, MEP Engineering, Integration" />
+    <div class="viz-caption">Diagram · AAS capability rings · navy texture from original brochure</div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card scope-in">
+      <h3 style="color:var(--ok);">Default — AAS</h3>
+      <p style="margin-bottom:0.08in;"><strong style="color:var(--white);">Structural rack &amp; platforms</strong><br />RK-MAS · RK-MEP · RK-CUDR · Field-bolted, crane-sequenced assemblies with OSHA access provisions.</p>
+      <p style="margin-bottom:0.08in;"><strong style="color:var(--white);">MEP support (structure for services)</strong><br />Cable tray, busway, conduit, process piping · AHU / pump / HX / process platforms · Vibration &amp; access framing.</p>
+      <p><strong style="color:var(--white);">Integration (RK-INT)</strong><br />BIM clash awareness · Utility envelopes · Equipment interfaces · Sequenced delivery · Commissioning handoff packages.</p>
+    </div>
+    <div class="card scope-mep">
+      <h3 style="color:var(--steel);">Available when required</h3>
+      <p style="margin-bottom:0.08in;"><strong style="color:var(--white);">Full MEP engineering</strong><br />Mechanical, electrical, plumbing / process utilities as an offered scope — design packages, coordinated models, and stamped deliverables where applicable.</p>
+      <p style="margin-bottom:0.08in;">Stamped drawings provided per project jurisdiction where applicable.</p>
+      <div class="avail-box" style="margin-top:0.1in;">
+        Allied / AAS can provide the MEP engineering if required — alongside structural and integration.
+      </div>
+    </div>
+    <div class="card scope-out">
+      <h3>Coordinate with EPC / partners</h3>
+      <p style="margin-bottom:0.08in;">When MEP engineering remains with the owner’s team, we still engineer structural support and provide integration coordination alongside your:</p>
+      <p>· EPC / GC (schedule, crane, logistics)<br />· Designated MEP / electrical / process EOR<br />· Controls / automation vendors<br />· Equipment OEMs</p>
+      <div class="boundary" style="margin-top:0.1in;">
+        Default = structural + coordinate. Full MEP engineering = available scope when required.
+      </div>
+    </div>
+  </div>
+
+  <div class="apps" style="margin-top:0.16in;">
+    <b>Markets</b>
+    Mission-critical data centers · Battery &amp; EV · Petrochem &amp; refining · Industrial campuses · Pharma &amp; food · Logistics · Manufacturing cells with conveyance
+  </div>
+  <div class="page-num">03 / 08</div>
+</section>
+
+<!-- ===================== PAGE 04 RK-MAS ===================== -->
+<section class="sheet" id="p04">
+  <div class="brand-lock">
+    <div class="aas">Product family</div>
+    <div class="eyebrow">Modular · Scalable · Field-ready</div>
+  </div>
+
+  <div class="prod-header">
+    <div>
+      <div class="prod-id">Product 01 / RK-MAS</div>
+      <h2 style="margin-top:0.06in;">Modular Aisle<br />Structure for MEP<br />support.</h2>
+    </div>
+    <div class="prod-tags">
+      Cable tray · Busway · Conduit<br />
+      Hot / Cold aisle<br />
+      Customizable · Modular · Scalable
+    </div>
+  </div>
+
+  <div class="prod-split">
+    <div>
+      <p class="lede">Engineered steel framing for electrical, mechanical, and plumbing services — configured around your routing, scaled bay by bay, and built to install fast.</p>
+      <div class="spec-row"><div class="k">Best for</div><div class="v">Cable tray networks · Busway systems · Electrical conduit · Process &amp; mechanical piping · Hot/cold aisle containment</div></div>
+      <div class="spec-row"><div class="k">Configuration</div><div class="v">Hot/cold aisle, multi-tier, single or double-stack. Modular bay spacing, scalable for future expansion without re-engineering primary steel.</div></div>
+      <div class="spec-row"><div class="k">Finishes</div><div class="v">Powder coating · Epoxy polyurethane · Hot-dip galvanized · Primed · Custom colors on request</div></div>
+      <div class="spec-row"><div class="k">Standards</div><div class="v">AWS · AISC · CSA A660 · Designed to local seismic &amp; building codes</div></div>
+      <div class="note-box">RK-MAS frames ship with clearances and attachment zones coordinated for multi-trade hangers, busway, and process lines — so MEP contractors pull wire and set pipe into a known geometry. Pair with optional AAS MEP engineering when design authority is needed in-house.</div>
+      <div class="grid-2" style="margin-top:0.12in;">
+        <div class="tile"><strong>Future-flexible.</strong><span>Add bays or tiers without re-engineering primary steel.</span></div>
+        <div class="tile"><strong>Coordinated routing.</strong><span>IFC / Revit / SOLIDWORKS / BIM 360 model exchange standard.</span></div>
+        <div class="tile"><strong>Fast erection.</strong><span>Shop-fabricated assemblies, sequenced for the field.</span></div>
+        <div class="tile"><strong>Brand-matched.</strong><span>Factory finish coat in your color — no field paint.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="viz viz-inline viz-photo">
+        <img src="assets/from-original/rk-mas-aisle-render.png" alt="RK-MAS modular aisle structure — original product art" />
+        <div class="viz-caption">Imagery adapted from Allied structural rack brochure · Product 01</div>
+      </div>
+      <div class="apps"><b>Typical applications</b><br />Data centers · Process plants · Battery / EV · Pharma &amp; food · Logistics</div>
+      <p class="credit-line">Original Product 01 art · modular aisle structure render</p>
+    </div>
+  </div>
+  <div class="page-num">04 / 08</div>
+</section>
+
+<!-- ===================== PAGE 05 RK-MEP ===================== -->
+<section class="sheet" id="p05">
+  <div class="brand-lock">
+    <div class="aas">Product family</div>
+    <div class="eyebrow">Mechanical · Electrical · Plumbing platforms</div>
+  </div>
+
+  <div class="prod-header">
+    <div>
+      <div class="prod-id">Product 02 / RK-MEP</div>
+      <h2 style="margin-top:0.06in;">Custom platforms<br />for the heavy stuff.</h2>
+    </div>
+    <div class="prod-tags">
+      AHU · Pumps · Heat exchangers<br />
+      Process equipment · Electrical gear<br />
+      Fully customizable · Prefabricated
+    </div>
+  </div>
+
+  <div class="prod-split">
+    <div>
+      <p class="lede">Steel platforms engineered for AHUs, pumps, heat exchangers, and process equipment — sized to your loads, prefabricated, and delivered ready for erection. Expanded for full M/E/P platform language: rooftop decks, chiller and pump skids, electrical gear platforms, and process modules.</p>
+      <div class="spec-row"><div class="k">Designed for</div><div class="v">Equipment dead &amp; live loads · Vibration &amp; serviceability · Maintenance &amp; access · Plumbing &amp; process skids · Electrical gear &amp; busway landing platforms</div></div>
+      <div class="spec-row"><div class="k">Geometry</div><div class="v">Single or multi-level decks, custom plan dimensions, OSHA stairs/ladders/handrails, utility penetration zones and drip/containment framing.</div></div>
+      <div class="spec-row"><div class="k">Finishes</div><div class="v">Powder coating · Epoxy polyurethane · HDG for outdoor / coastal · Primed · Custom colors</div></div>
+      <div class="spec-row"><div class="k">Delivery</div><div class="v">Prefabricated &amp; field-bolted, minimal on-site welding, sequenced to crane schedule.</div></div>
+      <div class="note-box">Platforms respect process loads, vibration criteria, and utility stubs — coordinated with OEM anchor patterns and your EPC crane plan. When full MEP engineering is in AAS scope, platform geometry and utility stubs are designed as one package.</div>
+      <div class="grid-2" style="margin-top:0.12in;">
+        <div class="tile"><strong>Vibration-tuned.</strong><span>Decking and bracing designed around equipment dynamics.</span></div>
+        <div class="tile"><strong>Inspection-ready.</strong><span>Engineered access for serviceability from day one.</span></div>
+        <div class="tile"><strong>Coastal-rated.</strong><span>HDG option for high-corrosion and marine environments.</span></div>
+        <div class="tile"><strong>Crane-coordinated.</strong><span>Erection sequence built around your lift plan.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="viz-stack">
+        <div class="viz viz-inset viz-photo">
+          <img src="assets/from-original/rk-mep-platform-photo.png" alt="Installed multi-level equipment platform — original brochure photo" />
+        </div>
+        <div class="viz viz-inline viz-photo">
+          <img src="assets/from-original/rk-mep-platform-render.png" alt="RK-MEP steel platform with stairs — original product art" />
+          <div class="viz-caption">Imagery adapted from Allied structural rack brochure · Product 02</div>
+        </div>
+      </div>
+      <div class="apps"><b>Typical applications</b><br />Rooftop AHU decks · Chiller skids · Pump platforms · Process modules · Electrical / switchgear platforms · Heat-exchanger decks</div>
+      <p class="credit-line">Original Product 02 art · platform photo + render</p>
+    </div>
+  </div>
+  <div class="page-num">05 / 08</div>
+</section>
+
+<!-- ===================== PAGE 06 RK-CUDR ===================== -->
+<section class="sheet" id="p06">
+  <div class="brand-lock">
+    <div class="aas">Product family</div>
+    <div class="eyebrow">Long span · High load · Multi-trade</div>
+  </div>
+
+  <div class="prod-header">
+    <div>
+      <div class="prod-id">Product 03 / RK-CUDR</div>
+      <h2 style="margin-top:0.06in;">Central Utility<br />Distribution Rack.</h2>
+    </div>
+    <div class="prod-tags">
+      High load capacity<br />
+      Long span<br />
+      Fully customizable
+    </div>
+  </div>
+
+  <div class="prod-split">
+    <div>
+      <p class="lede">Long-span structural rack systems that organize, support, and route multi-trade utility networks across the site — preserving structural efficiency and giving every trade clear, serviceable corridors.</p>
+      <div class="spec-row"><div class="k">Designed for</div><div class="v">Span &amp; load criteria · High piping &amp; utility densities · Service zones · Integration with primary steel · Manufacturing cells with conveyance</div></div>
+      <div class="spec-row"><div class="k">Capacity</div><div class="v">High-load, long-span configurations sized to equipment reactions, seismic envelope, and live loads — with expansion capacity reserved.</div></div>
+      <div class="spec-row"><div class="k">Coordination</div><div class="v">Geometry tied to building columns; sequenced erection with primary structure. Multi-trade corridor allocation in BIM before steel hits the shop.</div></div>
+      <div class="spec-row"><div class="k">Finishes</div><div class="v">Powder coating · Epoxy polyurethane · Hot-dip galvanized · Primed · Custom colors</div></div>
+      <div class="note-box">RK-CUDR geometry can be planned against facility utility envelopes — 480V paths, compressed air, exhaust / MUA, gas, and HVAC chases — so the steel corridor matches the plant’s utility story. Optional AAS MEP engineering can own the utility design packages that feed those envelopes.</div>
+      <div class="grid-2" style="margin-top:0.12in;">
+        <div class="tile"><strong>Clear utility corridors.</strong><span>Unobstructed routing for piping, cabling, and all trades.</span></div>
+        <div class="tile"><strong>Integration-first.</strong><span>Engineered with the building’s primary steel from day one.</span></div>
+        <div class="tile"><strong>Service zones.</strong><span>Designed-in maintenance access from concept through delivery.</span></div>
+        <div class="tile"><strong>Adaptable.</strong><span>Capacity reserved for future expansion of the utility envelope.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="viz-stack">
+        <div class="viz viz-inset viz-photo">
+          <img src="assets/from-original/rk-cudr-pipe-photo.png" alt="Utility distribution rack with multi-trade piping — original brochure photo" />
+        </div>
+        <div class="viz viz-inline viz-photo">
+          <img src="assets/from-original/rk-cudr-rack-render.png" alt="RK-CUDR long-span utility rack — original product art" />
+          <div class="viz-caption">Imagery adapted from Allied structural rack brochure · Product 03</div>
+        </div>
+      </div>
+      <div class="apps"><b>Typical applications</b><br />Refining &amp; petrochem · Battery &amp; EV plants · Industrial campuses · Mission critical · Manufacturing / process cells</div>
+      <p class="credit-line">Original Product 03 art · pipe-rack photo + isometric</p>
+    </div>
+  </div>
+  <div class="page-num">06 / 08</div>
+</section>
+
+<!-- ===================== PAGE 07 RK-INT ===================== -->
+<section class="sheet sheet-textured" id="p07">
+  <div class="brand-lock">
+    <div class="aas">Product family</div>
+    <div class="eyebrow">Integration · Plant MEP coordination</div>
+  </div>
+
+  <div class="prod-header">
+    <div>
+      <div class="prod-id">Product 04 / RK-INT</div>
+      <h2 style="margin-top:0.06in;">Integration that lands<br />with the steel.</h2>
+    </div>
+    <div class="prod-tags">
+      BIM · Utility envelopes<br />
+      Equipment interfaces<br />
+      MEP eng optional · Handoff
+    </div>
+  </div>
+
+  <p class="lede" style="max-width:9.5in;margin-bottom:0.12in;">RK-INT is the coordination layer on top of RK-MAS, RK-MEP, and RK-CUDR. We engineer the structural support <em>and</em> package the interfaces so EPC, trades, OEMs, and controls teams share one geometry, one sequence, and one punchable handoff. <strong style="color:var(--accent-soft);">When required, full MEP engineering slots into the same flow</strong> — design packages and coordinated models before fabrication.</p>
+
+  <div class="viz viz-flow" style="margin-bottom:0.14in;">
+    <img src="assets/rk-int-flow.svg" alt="Diagram: six-step integration flow including optional MEP engineering" />
+    <div class="viz-caption">Diagram · 6-step integration flow (MEP eng optional) · texture from original brochure</div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:0.12in;">
+    <div class="card"><h3>01 · BIM multi-trade</h3><p>IFC / Revit / BIM360 exchange; clash awareness for tray, pipe, busway, and structure; models aligned to erection sequence.</p></div>
+    <div class="card"><h3>02 · Utility envelopes</h3><p>Corridor &amp; platform geometry vs facility utilities — electrical paths, compressed air, exhaust, gas, HVAC / MUA — with owner MEP EOR or AAS MEP engineering.</p></div>
+    <div class="card"><h3>03 · MEP eng (optional)</h3><p>Full mechanical, electrical, plumbing / process utilities design packages &amp; coordinated models when AAS is engaged for MEP engineering. Stamped drawings per project jurisdiction where applicable.</p></div>
+    <div class="card"><h3>04 · Equipment interfaces</h3><p>Reactions, vibration, access, and conveyance clearances packaged for OEM and EPC use.</p></div>
+    <div class="card"><h3>05 · Commissioning handoff</h3><p>Install sequence, utilities punch lists, FAT/SAT mindset packages — conceptual coordination; licensed PLC/HMI or safety-circuit EOR remains with designated controls authority unless separately contracted.</p></div>
+    <div class="card"><h3>06 · Sequenced delivery</h3><p>Shop packages and ship sets tied to crane plans — factory-direct visibility from design through outbound.</p></div>
+  </div>
+
+  <div class="boundary">
+    <strong>Default vs available:</strong> Default = structural support + integration coordination with EPC/MEP partners. <strong>Available when required</strong> = full MEP engineering (M/E/P / process utilities) as AAS offered scope — design packages, coordinated models, stamped drawings per project jurisdiction where applicable. Controls / safety-circuit EOR remains separately designated unless contracted.
+  </div>
+  <div class="page-num">07 / 08</div>
+</section>
+
+<!-- ===================== PAGE 08 DELIVERY + CTA ===================== -->
+<section class="sheet" id="p08">
+  <div class="brand-lock">
+    <div class="aas">Delivery · Standards · Next step</div>
+    <div class="eyebrow">From routing to erection</div>
+  </div>
+
+  <h2>From routing to erection.<br />One team.</h2>
+
+  <div class="process" style="margin-top:0;margin-bottom:0.12in;">
+    <div class="step"><div class="n">1</div><div class="t">Routing in</div><div class="d">Send cable, pipe, busway, and equipment layouts (or BIM).</div></div>
+    <div class="step"><div class="n">2</div><div class="t">BIM / Eng</div><div class="d">Structural support sized to loads &amp; seismic; clash awareness.</div></div>
+    <div class="step"><div class="n">3</div><div class="t">MEP eng*</div><div class="d">Optional — full M/E/P packages when required; stamped drawings per project jurisdiction.</div></div>
+    <div class="step"><div class="n">4</div><div class="t">Fabricate</div><div class="d">Factory-direct, finish-matched, QC’d assemblies.</div></div>
+    <div class="step"><div class="n">5</div><div class="t">Ship &amp; erect</div><div class="d">Sequenced loads ready for field bolting and crane lifts.</div></div>
+    <div class="step"><div class="n">6</div><div class="t">Handoff</div><div class="d">Documentation for trades and commissioning teams.</div></div>
+  </div>
+
+  <div class="cta-visual" style="margin-bottom:0.12in;">
+    <div>
+      <div class="grid-2" style="margin-bottom:0.12in;">
+        <div class="card">
+          <h3>Finishes &amp; standards</h3>
+          <p>Powder coating · Epoxy polyurethane · Hot-dip galvanized · Primed · Custom colors<br /><br />AWS · AISC · CSA A660 · Seismic to local codes · IFC / Revit / BIM360</p>
+        </div>
+        <div class="card">
+          <h3>MEP engineering note</h3>
+          <p>Allied / AAS can provide full MEP engineering if required — design packages, coordinated models, and stamped drawings per project jurisdiction where applicable.</p>
+        </div>
+      </div>
+    </div>
+    <div class="viz viz-photo" style="min-height:2.2in;">
+      <img src="assets/from-original/cta-welding-fab.png" alt="Factory robotic welding — original Allied closing art" />
+      <div class="viz-caption">Imagery adapted from Allied structural rack brochure · closing art</div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--line); padding-top:0.14in;">
+    <div class="eyebrow" style="margin-bottom:0.06in;">Let’s design it together</div>
+    <h2 style="font-size:16pt;">Send us your routing. We’ll send back a layout &amp; budget.</h2>
+    <ul class="cta-list">
+      <li>Stamped structural layout aligned to your loads &amp; routing</li>
+      <li>Optional MEP engineering package when required</li>
+      <li>Schedule sequenced to your erection plan</li>
+      <li>Budgetary pricing with finish &amp; delivery options</li>
+      <li>BIM / Revit / IFC model coordination included</li>
+      <li>Integration handoff package outline (RK-INT) on request</li>
+    </ul>
+    <div class="contact-block">
+      <span>1.877.997.8335</span>
+      <span>INFO@ALLIEDBUILDINGS.COM</span>
+      <span>ALLIEDBUILDINGS.COM</span>
+    </div>
+    <p style="margin-top:0.1in;color:var(--steel);font-size:11pt;">Steel support, without constraints. · Integration that respects your process. · MEP engineering when you need it.</p>
+  </div>
+  <div class="page-num">08 / 08</div>
+</section>
+
+</body>
+</html>
